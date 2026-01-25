@@ -40,6 +40,8 @@ public class Service_Doctor {
 
         doctor.setName(newData.getName());
         doctor.setSpecialist(newData.getSpecialist());
+        doctor.setEndTime(newData.getEndTime());
+        doctor.setStartTime(newData.getStartTime());
 
         return doctorRepository.save(doctor);
     }
