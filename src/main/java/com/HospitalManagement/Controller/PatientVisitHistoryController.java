@@ -18,17 +18,13 @@ import java.util.Optional;
 @RequestMapping("/api/patientVisitHistory")
 public class PatientVisitHistoryController {
 
-    // Creation of instance of the 'Patient' , 'Doctor' , 'PatientVisitHistory'
-    private final Service_Patient _servicePatient;
-    private final Service_Doctor _serviceDoctor;
+    // Creation of instance of the 'PatientVisitHistory' service
     private final Service_PatientVisitHistory _servicePatientVisitHistory;
 
     // Creation of constructor
     @Autowired
     public PatientVisitHistoryController(Service_PatientVisitHistory visitHistory , Service_Patient servicePatient , Service_Doctor serviceDoctor) {
         System.out.println("Calling the constructor in PatientVisitHistory Controller class");
-        this._serviceDoctor = serviceDoctor;
-        this._servicePatient = servicePatient;
         this._servicePatientVisitHistory = visitHistory;
     }
 
