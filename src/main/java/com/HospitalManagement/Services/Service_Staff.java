@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class Service_Staff {
 
-    // Creation of service instance
+    // Creation of repo instance
     private final StaffRepository _staffrepo;
 
     // Creation of constructor
@@ -49,7 +49,7 @@ public class Service_Staff {
         _currentStaff.setStartTime(_staff.getStartTime());
 
         // Returning the result
-        return _currentStaff;
+        return _staffrepo.save(_currentStaff);
     }
 
         // Deleting the record
