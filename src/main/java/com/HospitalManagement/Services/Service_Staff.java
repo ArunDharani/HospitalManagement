@@ -47,6 +47,7 @@ public class Service_Staff {
         _currentStaff.setName(_staff.getName());
         _currentStaff.setEndTime(_staff.getEndTime());
         _currentStaff.setStartTime(_staff.getStartTime());
+        _currentStaff.setEmail(_staff.getEmail());
 
         // Returning the result
         return _staffrepo.save(_currentStaff);

@@ -19,6 +19,9 @@ public class Doctor {
     private String name;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String specialist;
 
     @Column(nullable = false)
@@ -67,5 +70,13 @@ public class Doctor {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

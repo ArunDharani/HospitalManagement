@@ -25,6 +25,9 @@ public class Staff {
     private String name;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private LocalTime startTime;
 
     @Column(nullable = false)
@@ -61,5 +64,13 @@ public class Staff {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

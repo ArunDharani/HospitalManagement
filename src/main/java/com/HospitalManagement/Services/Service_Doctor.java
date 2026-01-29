@@ -42,6 +42,7 @@ public class Service_Doctor {
         doctor.setSpecialist(newData.getSpecialist());
         doctor.setEndTime(newData.getEndTime());
         doctor.setStartTime(newData.getStartTime());
+        doctor.setEmail(newData.getEmail());
 
         return doctorRepository.save(doctor);
     }

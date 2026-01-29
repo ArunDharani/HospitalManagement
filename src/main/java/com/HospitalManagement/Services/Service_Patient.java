@@ -44,6 +44,7 @@ public class Service_Patient {
         _currentPatient.setName(_patient.getName());
         _currentPatient.setAddress(_patient.getAddress());
         _currentPatient.setAge(_patient.getAge());
+        _currentPatient.setEmail(_patient.getEmail());
 
         // Returning the result
         return _patientRepo.save(_currentPatient);
