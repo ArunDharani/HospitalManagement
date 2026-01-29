@@ -70,6 +70,9 @@ public class Service_Lab {
                 lab1.setStartTime(lab.getStartTime());
                 lab1.setSessionDate(lab.getSessionDate());
                 lab1.setTestResult(lab.getTestResult());
+
+                // saving the record
+                labRepo.save(lab1);
                 System.out.println("new lab record is created");
                 return lab1;
             } else {
@@ -100,6 +103,10 @@ public class Service_Lab {
                     newData.setStaff(staff.get());
                     newData.setPatient(patient.get());
                     newData.setDoctor(doctor.get());
+
+                    // saving the record
+                    labRepo.save(newData);
+
                     System.out.println("Lab data has been updated successfully");
                     return newData;
                 } else {
