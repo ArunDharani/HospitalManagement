@@ -35,6 +35,11 @@ public class PatientVisitHistory {
     @Column(nullable = false)
     private String reason;
 
+    // Creation of constructor
+    public PatientVisitHistory() {
+        System.out.println("Constructor call from PatientVisitHistory");
+    }
+
     // Creation of Getters and Setters
     public Long getId() {
         return id;

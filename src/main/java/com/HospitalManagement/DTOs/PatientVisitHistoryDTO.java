@@ -17,6 +17,15 @@ public class PatientVisitHistoryDTO {
     private Long doctorId;
     private String reason;
 
+    // Creation of parameterized constructor
+    public PatientVisitHistoryDTO(LocalDate visitDate, LocalTime visitTime, Long patientId, Long doctorId, String reason) {
+        this.visitDate = visitDate;
+        this.visitTime = visitTime;
+        this.patientId = patientId;
+        this.doctorId = doctorId;
+        this.reason = reason;
+    }
+
     // Creation of Getters and Setters
     public LocalDate getVisitDate() {
         return visitDate;

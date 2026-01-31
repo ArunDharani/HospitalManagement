@@ -9,7 +9,9 @@ import java.time.LocalTime;
 public class Doctor {
 
     // REQUIRED by JPA
-    public Doctor() {}
+    public Doctor() {
+        System.out.println("Call from the Doctor Entity");
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -18,6 +18,17 @@ public class LabDTO {
     private LocalTime endTime;
     private String testResult;
 
+    // Creation of Constructor
+    public LabDTO(Long patientId, Long staffId, Long doctorId, LocalDate sessionDate, LocalTime startTime, LocalTime endTime, String testResult) {
+        this.patientId = patientId;
+        this.staffId = staffId;
+        this.doctorId = doctorId;
+        this.sessionDate = sessionDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.testResult = testResult;
+    }
+
     // Creation of Getters and Setters
     public Long getPatientId() {
         return patientId;
