@@ -8,6 +8,7 @@ import java.time.LocalTime;
 public class DoctorDTO {
 
     // Creation of class Members
+    private Long id;
     private String name;
     private String email;
     private String specialist;
@@ -15,7 +16,8 @@ public class DoctorDTO {
     private LocalTime endTime;
 
     // Creation of constructor
-    public DoctorDTO(String name, String email, String specialist, LocalTime startTime, LocalTime endTime) {
+    public DoctorDTO(Long id , String name, String email, String specialist, LocalTime startTime, LocalTime endTime) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.specialist = specialist;
@@ -24,6 +26,14 @@ public class DoctorDTO {
     }
 
     // Creation of Getter and Setter Methods
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

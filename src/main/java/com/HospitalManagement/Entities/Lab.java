@@ -14,11 +14,6 @@ import java.time.LocalTime;
 @Table(name = "lab")
 public class Lab {
 
-    // Creation of Constructor
-    public Lab() {
-        System.out.println("Lab Entity layer has been created");
-    }
-
     // Creation of Class Members
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +30,11 @@ public class Lab {
 
     @Column(nullable = false)
     private String testResult;
+
+    // Creation of default Constructor
+    public Lab() {
+        System.out.println("Lab Entity layer has been created");
+    }
 
     // Creation of Foreign key members
     @ManyToOne(fetch = FetchType.EAGER)

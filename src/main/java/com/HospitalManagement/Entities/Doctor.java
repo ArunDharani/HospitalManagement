@@ -7,12 +7,6 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "doctor")
 public class Doctor {
-
-    // REQUIRED by JPA
-    public Doctor() {
-        System.out.println("Call from the Doctor Entity");
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +25,20 @@ public class Doctor {
 
     @Column(nullable = false)
     private LocalTime endTime;
+
+    // Creation of Default constructor
+    public Doctor() {
+        System.out.println("Doctor default constructor has been called");
+    }
+
+    // Creation of Parameterized constructor
+    public Doctor(String name, String email, String specialist, LocalTime startTime, LocalTime endTime) {
+        this.name = name;
+        this.email = email;
+        this.specialist = specialist;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
     // Getters
     public Long getId() {

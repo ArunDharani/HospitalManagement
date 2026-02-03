@@ -9,11 +9,6 @@ import jakarta.persistence.*;
 @Table(name = "patient")
 public class Patient {
 
-    // Creation of constructor
-    public Patient() {
-        System.out.println("Patient constructor has been called");
-    }
-
     // Creation of class Members
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +25,19 @@ public class Patient {
 
     @Column(nullable = false)
     private Integer age;
+
+    // Creation of default constructor
+    public Patient() {
+        System.out.println("Patient constructor has been called");
+    }
+
+    // Creation of parameterized constructor
+    public Patient(String name, String email, String address, Integer age) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.age = age;
+    }
 
     // Creation of Getters and Setters
     public Long getId() {

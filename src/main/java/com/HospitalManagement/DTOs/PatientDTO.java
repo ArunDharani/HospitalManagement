@@ -7,13 +7,15 @@ package com.HospitalManagement.DTOs;
 public class PatientDTO {
 
     // Creation of class Members
+    private Long id;
     private String name;
     private String email;
     private String address;
     private int age;
 
     // Creation of constructor
-    public PatientDTO(String name, String email, String address, int age) {
+    public PatientDTO(Long id , String name, String email, String address, int age) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.address = address;
@@ -21,6 +23,14 @@ public class PatientDTO {
     }
 
     // Creation of Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

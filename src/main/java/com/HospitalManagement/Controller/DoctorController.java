@@ -1,5 +1,6 @@
 package com.HospitalManagement.Controller;
 
+import com.HospitalManagement.DTOs.DoctorDTO;
 import com.HospitalManagement.Entities.Doctor;
 import com.HospitalManagement.Services.Service_Doctor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/doctor")
 public class DoctorController {
 
+    // Creation of instance of the 'ServiceDoctor'
     private final Service_Doctor serviceDoctor;
 
     @Autowired
@@ -19,37 +21,33 @@ public class DoctorController {
         this.serviceDoctor = serviceDoctor;
     }
 
-    // GET ALL
+    // obtaining all the doctor details
     @GetMapping("/all")
-    public List<Doctor> getAllDocs() {
+    public List<DoctorDTO> getAllDocs() {
         return serviceDoctor.showAllDoc();
     }
 
-    // GET BY ID
+    // obtaining particular doctor detail
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDocById(@PathVariable Long id) {
+    public ResponseEntity<DoctorDTO> getDocById(@PathVariable Long id) {
         return ResponseEntity.ok(serviceDoctor.showDetail(id));
     }
 
     // CREATE
     @PostMapping
-    public ResponseEntity<Doctor> hireDoctor(@RequestBody Doctor doctor) {
-        return ResponseEntity.ok(serviceDoctor.hireDoctor(doctor));
+    public ResponseEntity<String> hireDoctor(@RequestBody DoctorDTO doctor) {
+        return serviceDoctor.hireDoctor(doctor);
     }
 
     // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<Doctor> updateDoctor(
-            @PathVariable Long id,
-            @RequestBody Doctor doctor) {
-
-        return ResponseEntity.ok(serviceDoctor.updateDocRecord(id, doctor));
+    public ResponseEntity<String> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctor) {
+        return serviceDoctor.updateDocRecord(id , doctor);
     }
 
     // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDoctor(@PathVariable Long id) {
-        serviceDoctor.removeDoc(id);
-        return ResponseEntity.ok("Doctor removed successfully");
+        return ResponseEntity.ok(serviceDoctor.removeDoc(id));
     }
 }
