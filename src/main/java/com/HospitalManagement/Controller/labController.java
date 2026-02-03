@@ -2,14 +2,12 @@
 
 // Importing the necessary packages
 package com.HospitalManagement.Controller;
-
 import com.HospitalManagement.DTOs.LabDTO;
 import com.HospitalManagement.Entities.Lab;
 import com.HospitalManagement.Services.Service_Lab;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 

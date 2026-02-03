@@ -12,11 +12,6 @@ import java.time.LocalTime;
 @Table(name = "staff")
 public class Staff {
 
-    // Creation of Constructor
-    public Staff() {
-        System.out.println("Hence the constructor for Staff has been called");
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,6 +27,19 @@ public class Staff {
 
     @Column(nullable = false)
     private LocalTime endTime;
+
+    // Creation of default Constructor
+    public Staff() {
+        System.out.println("Hence the constructor for Staff has been called");
+    }
+
+    // Creation of Parameterized construtor
+    public Staff(String name , String email , LocalTime startTime , LocalTime endTime) {
+        this.name = name;
+        this.email = email;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
     // Creation of Getters and Setters
     public Long getId() {

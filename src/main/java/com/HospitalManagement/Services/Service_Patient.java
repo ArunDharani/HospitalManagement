@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
-
-import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +43,7 @@ public class Service_Patient {
 
             // Returning the result
             return ResponseEntity.ok("New patient details has been created successfully");
+
         } catch (Exception exception) {
             return ResponseEntity.ok("Some exception has occurred while creating new patient record in 'admitPatient' function in Service_patient : \n"+exception.getMessage());
         }
@@ -54,7 +53,7 @@ public class Service_Patient {
     public List<PatientDTO> showAllPatient() {
         try {
             // Creation of array to store all the DTO
-            List<PatientDTO> _allpatients = new ArrayList<>();
+            List<PatientDTO> _allpatients = new ArrayList<PatientDTO>();
 
             // Now converting all patient Entity to patientDTO
             _patientRepo.findAll().forEach(patient -> {
@@ -63,6 +62,7 @@ public class Service_Patient {
 
             // returning the result
             return _allpatients;
+
         } catch (Exception exception) {
             throw new RuntimeException("Some exception has occurred while obtaining all the patient details in 'showAllPatient' function in Service Patient : \n"+exception.getMessage());
         }
@@ -85,19 +85,31 @@ public class Service_Patient {
     }
 
     // Updating the existing patient record
-    public Patient updatePatientRecord(Long id , Patient _patient) {
-        // First let us check such patient exist or not
-        Patient _currentPatient = _patientRepo.findById(id).orElseThrow( ()-> new RuntimeException("No such patient record exist"));
+    public ResponseEntity<String> updatePatientRecord(Long id , PatientDTO _patient) {
+        try {
+            // First let us check that particular data exist or not
+            Optional<Patient> existPatient = _patientRepo.findById(id);
 
-        // Updating the records
-        _currentPatient.setName(_patient.getName());
-        _currentPatient.setAddress(_patient.getAddress());
-        _currentPatient.setAge(_patient.getAge());
-        _currentPatient.setEmail(_patient.getEmail());
+            if (existPatient.isPresent()) {
+                // Now let us update the data
+                Patient updatedPatient = existPatient.get();
+                updatedPatient.setName(_patient.getName());
+                updatedPatient.setEmail(_patient.getEmail());
+                updatedPatient.setAddress(_patient.getAddress());
+                updatedPatient.setAge(_patient.getAge());
 
-        // Returning the result
-        return _patientRepo.save(_currentPatient);
+                // saving the result
+                _patientRepo.save(updatedPatient);
 
+                // result
+                return ResponseEntity.ok("Thus data is updated for the id : "+id);
+
+            } else {
+                throw new RuntimeException("No such patient exist");
+            }
+        } catch (Exception exception) {
+            return ResponseEntity.ok("Some Exception has occurred in the 'updatePatientRecord' in Service_Patient : \n"+exception.getMessage());
+        }
     }
 
     // Deleting the patient record
@@ -112,6 +124,7 @@ public class Service_Patient {
             } else {
                 return "no such patient record exist";
             }
+
         } catch (Exception exception) {
             return "Some error has occurred please look into this : \n"+exception.getMessage();
         }
