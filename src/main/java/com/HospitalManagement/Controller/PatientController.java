@@ -1,13 +1,13 @@
 // File created by Arun on Sunday (25/1/26)
+
+// Importing the necessary packages
 package com.HospitalManagement.Controller;
-import com.HospitalManagement.Entities.Patient;
 import com.HospitalManagement.Services.Service_Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.HospitalManagement.DTOs.PatientDTO;
 import java.util.List;
-import java.util.Optional;
 
 // Creation of RestController class
 @RestController
@@ -25,28 +25,28 @@ public class PatientController {
 
     // Creation of all the CRUD methods
     @GetMapping("/all")
-    public List<Patient> getAllPatient() {
+    public List<PatientDTO> getAllPatient() {
         return servicePatient.showAllPatient();
     }
 
-    @GetMapping("{_id}")
-    public ResponseEntity<Patient> getPatientbyId(@PathVariable Long _id) {
+    @GetMapping("/{_id}")
+    public ResponseEntity<PatientDTO> getPatientbyId(@PathVariable Long _id) {
         return ResponseEntity.ok(servicePatient.showPatientDetail(_id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Patient> admitPatient(@RequestBody Patient _patient) {
-        return ResponseEntity.ok(servicePatient.admitPatient(_patient));
+    public ResponseEntity<String> admitPatient(@RequestBody PatientDTO _patient) {
+        return servicePatient.admitPatient(_patient);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatepatient(@PathVariable Long id , @RequestBody Patient _patient) {
-        return ResponseEntity.ok(servicePatient.updatePatientRecord(id , _patient));
+    public ResponseEntity<String> updatepatient(@PathVariable Long id , @RequestBody PatientDTO _patient) {
+        return servicePatient.updatePatientRecord(id , _patient);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePatient(@PathVariable Long id) {
-        servicePatient.removePatientRecord(id);
-        return ResponseEntity.ok("Patient Data has been removed");
+        return ResponseEntity.ok(servicePatient.removePatientRecord(id));
+
     }
 }

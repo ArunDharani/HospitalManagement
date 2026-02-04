@@ -35,18 +35,18 @@ public class StaffController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Staff> hireStaff(@RequestBody Staff staff) {
+    public ResponseEntity<String> hireStaff(@RequestBody Staff staff) {
         return ResponseEntity.ok(serviceStaff.hireStaff(staff));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Staff> updateStaffDetail(@PathVariable Long id , @RequestBody Staff _staff) {
+    public ResponseEntity<String> updateStaffDetail(@PathVariable Long id , @RequestBody Staff _staff) {
         return ResponseEntity.ok(serviceStaff.updateStaffRecord(id , _staff));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removeStaff(@PathVariable Long id) {
         serviceStaff.removeStaff(id);
-        return ResponseEntity.ok("Staff has been remomved");
+        return ResponseEntity.ok("Staff has been removed");
     }
 }

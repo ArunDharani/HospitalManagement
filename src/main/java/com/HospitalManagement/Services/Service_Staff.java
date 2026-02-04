@@ -24,8 +24,9 @@ public class Service_Staff {
 
     // Creation of CRUD functions
         // Create
-    public Staff hireStaff(Staff _staff) {
-        return _staffrepo.save(_staff);
+    public String hireStaff(Staff _staff) {
+        _staffrepo.save(_staff);
+        return "New staff data has been created";
     }
 
         // Read All
@@ -39,7 +40,7 @@ public class Service_Staff {
     }
 
         // update staff record
-    public Staff updateStaffRecord(Long id , Staff _staff) {
+    public String updateStaffRecord(Long id , Staff _staff) {
         // Obtaining the current record
         Staff _currentStaff = _staffrepo.findById(id).orElseThrow(() -> new RuntimeException("No such Staff Record present"));
 
@@ -50,7 +51,8 @@ public class Service_Staff {
         _currentStaff.setEmail(_staff.getEmail());
 
         // Returning the result
-        return _staffrepo.save(_currentStaff);
+        _staffrepo.save(_currentStaff);
+        return "Data has been updated";
     }
 
         // Deleting the record

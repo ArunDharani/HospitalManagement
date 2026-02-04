@@ -11,14 +11,21 @@ import java.time.LocalTime;
 public class PatientVisitHistoryDTO {
 
     // Creation of Class Members
+    private Long id;
     private LocalDate visitDate;
     private LocalTime visitTime;
     private Long patientId;
     private Long doctorId;
     private String reason;
 
+    // Creation of Default Constructor
+    public PatientVisitHistoryDTO() {
+        System.out.println("Default constructor has been called from PatientVisitHistoryDTO");
+    }
+
     // Creation of parameterized constructor
-    public PatientVisitHistoryDTO(LocalDate visitDate, LocalTime visitTime, Long patientId, Long doctorId, String reason) {
+    public PatientVisitHistoryDTO(Long id  , LocalDate visitDate, LocalTime visitTime, Long patientId, Long doctorId, String reason) {
+        this.id = id;
         this.visitDate = visitDate;
         this.visitTime = visitTime;
         this.patientId = patientId;
@@ -27,6 +34,14 @@ public class PatientVisitHistoryDTO {
     }
 
     // Creation of Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public LocalDate getVisitDate() {
         return visitDate;
     }

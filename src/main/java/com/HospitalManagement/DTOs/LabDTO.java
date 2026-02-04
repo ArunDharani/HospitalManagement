@@ -18,6 +18,11 @@ public class LabDTO {
     private LocalTime endTime;
     private String testResult;
 
+    // Creation of default constructor
+    public LabDTO() {
+        System.out.println("Calling Default Constructor of Lab DTO");
+    }
+
     // Creation of Constructor
     public LabDTO(Long patientId, Long staffId, Long doctorId, LocalDate sessionDate, LocalTime startTime, LocalTime endTime, String testResult) {
         this.patientId = patientId;

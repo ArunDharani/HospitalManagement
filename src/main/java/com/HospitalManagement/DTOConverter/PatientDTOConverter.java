@@ -6,8 +6,10 @@ package com.HospitalManagement.DTOConverter;
 import com.HospitalManagement.DTOs.PatientDTO;
 import com.HospitalManagement.Entities.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 // Creation of EntityDTO conversion class for Patient Entity
+@Component
 public class PatientDTOConverter {
 
     // Creation of constructor

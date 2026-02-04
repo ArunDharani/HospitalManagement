@@ -35,9 +35,18 @@ public class PatientVisitHistory {
     @Column(nullable = false)
     private String reason;
 
-    // Creation of constructor
+    // Creation of default constructor
     public PatientVisitHistory() {
         System.out.println("Constructor call from PatientVisitHistory");
+    }
+
+    // Creation of parameterized constructor
+    public PatientVisitHistory(LocalDate visitDate, LocalTime visitTime, Patient patient, Doctor doctor, String reason) {
+        this.visitDate = visitDate;
+        this.visitTime = visitTime;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.reason = reason;
     }
 
     // Creation of Getters and Setters

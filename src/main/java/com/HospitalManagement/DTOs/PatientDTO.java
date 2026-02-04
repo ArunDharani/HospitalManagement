@@ -13,6 +13,11 @@ public class PatientDTO {
     private String address;
     private int age;
 
+    // Creation of Default constructor
+    public PatientDTO() {
+        System.out.println("Called default constructor of PaitentDTO");
+    }
+
     // Creation of constructor
     public PatientDTO(Long id , String name, String email, String address, int age) {
         this.id = id;
