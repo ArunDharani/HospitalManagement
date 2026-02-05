@@ -11,7 +11,7 @@ public class StaffDTO {
     private Long id;
     private String name;
     private String email;
-    private LocalTime starTime;
+    private LocalTime startTime;
     private LocalTime endTime;
 
     // Creation of default constructor
@@ -20,11 +20,11 @@ public class StaffDTO {
     }
 
     // Creation of parameterized constructor
-    public StaffDTO(Long id , String name, String email, LocalTime starTime, LocalTime endTime) {
+    public StaffDTO(Long id , String name, String email, LocalTime startTime, LocalTime endTime) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.starTime = starTime;
+        this.startTime = startTime;
         this.endTime = endTime;
     }
 
@@ -53,12 +53,12 @@ public class StaffDTO {
         this.email = email;
     }
 
-    public LocalTime getStarTime() {
-        return starTime;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setStarTime(LocalTime starTime) {
-        this.starTime = starTime;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
     public LocalTime getEndTime() {

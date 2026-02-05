@@ -2,9 +2,7 @@
 
 // Importing the necessary packages
 package com.HospitalManagement.Entities;
-
 import jakarta.persistence.*;
-
 import java.time.LocalTime;
 
 // Creation of Staff Entity Class
@@ -33,7 +31,7 @@ public class Staff {
         System.out.println("Hence the constructor for Staff has been called");
     }
 
-    // Creation of Parameterized construtor
+    // Creation of Parameterized constructor
     public Staff(String name , String email , LocalTime startTime , LocalTime endTime) {
         this.name = name;
         this.email = email;

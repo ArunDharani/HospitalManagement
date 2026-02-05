@@ -5,8 +5,10 @@ package com.HospitalManagement.DTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.HospitalManagement.DTOs.StaffDTO;
 import com.HospitalManagement.Entities.Staff;
+import org.springframework.stereotype.Component;
 
 // Creation of Entity to DTO converter
+@Component
 public class StaffDTOConverter {
     
     // Creation of Constructor
@@ -17,7 +19,7 @@ public class StaffDTOConverter {
 
     // Creation of Function to convert DTO to Entity
     public Staff convetToEntity(StaffDTO staffDTO) {
-        return new Staff(staffDTO.getName() , staffDTO.getEmail() , staffDTO.getEndTime() , staffDTO.getEndTime());
+        return new Staff(staffDTO.getName() , staffDTO.getEmail() , staffDTO.getStartTime() , staffDTO.getEndTime());
     }
 
     // Creation of Function to convert Entity to DTO

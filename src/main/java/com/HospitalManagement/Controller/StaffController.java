@@ -2,6 +2,7 @@
 
 // Importing the necessary packages
 package com.HospitalManagement.Controller;
+import com.HospitalManagement.DTOs.StaffDTO;
 import com.HospitalManagement.Entities.Staff;
 import com.HospitalManagement.Services.Service_Staff;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +26,27 @@ public class StaffController {
 
     // Creation of CRUD controllers
     @GetMapping("/all")
-    public List<Staff> getallStaff() {
-        return serviceStaff.getAllStaff();
+    public ResponseEntity<List<StaffDTO>> getallStaff() {
+        return ResponseEntity.ok(serviceStaff.getAllStaff());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Staff> getSpecificStaff(@PathVariable Long id) {
+    public ResponseEntity<StaffDTO> getSpecificStaff(@PathVariable Long id) {
         return ResponseEntity.ok(serviceStaff.getstaffDetail(id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> hireStaff(@RequestBody Staff staff) {
+    public ResponseEntity<String> hireStaff(@RequestBody StaffDTO staff) {
         return ResponseEntity.ok(serviceStaff.hireStaff(staff));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateStaffDetail(@PathVariable Long id , @RequestBody Staff _staff) {
+    public ResponseEntity<String> updateStaffDetail(@PathVariable Long id , @RequestBody StaffDTO _staff) {
         return ResponseEntity.ok(serviceStaff.updateStaffRecord(id , _staff));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removeStaff(@PathVariable Long id) {
-        serviceStaff.removeStaff(id);
-        return ResponseEntity.ok("Staff has been removed");
+        return ResponseEntity.ok(serviceStaff.removeStaff(id));
     }
 }

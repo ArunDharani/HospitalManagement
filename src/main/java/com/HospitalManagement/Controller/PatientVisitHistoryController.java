@@ -32,33 +32,32 @@ public class PatientVisitHistoryController {
 
       // GET All api
     @GetMapping("/getall")
-    public List<PatientVisitHistory> getall() {
-        return _servicePatientVisitHistory.showAllVisit();
+    public ResponseEntity<List<PatientVisitHistoryDTO>> getall() {
+        return ResponseEntity.ok(_servicePatientVisitHistory.showAllVisit());
     }
 
       // GET specific data
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<PatientVisitHistory> > getData(@PathVariable Long id) {
+    public ResponseEntity<PatientVisitHistoryDTO> getData(@PathVariable Long id) {
         return ResponseEntity.ok(_servicePatientVisitHistory.showThisVisit(id));
     }
 
       // Create VisitRecord
     @PostMapping("/create")
-    public ResponseEntity<PatientVisitHistory> createVisitData(@RequestBody PatientVisitHistoryDTO data) {
+    public ResponseEntity<String> createVisitData(@RequestBody PatientVisitHistoryDTO data) {
         return ResponseEntity.ok(_servicePatientVisitHistory.createRecord(data));
     }
 
       // UpdateRecord
     @PutMapping("/{id}")
-    public ResponseEntity<PatientVisitHistory> updateData(@PathVariable Long id , @RequestBody PatientVisitHistoryDTO data) {
+    public ResponseEntity<String> updateData(@PathVariable Long id , @RequestBody PatientVisitHistoryDTO data) {
         return ResponseEntity.ok(_servicePatientVisitHistory.updateData(id , data));
     }
 
       // DeleteRecord
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRecord(@PathVariable Long id) {
-        _servicePatientVisitHistory.removeData(id);
-        return ResponseEntity.ok("Data has been removed successfully");
+        return ResponseEntity.ok(_servicePatientVisitHistory.removeData(id));
     }
 
 }

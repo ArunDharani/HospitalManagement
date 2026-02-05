@@ -2,7 +2,6 @@
 
 // Importing the necessary packages
 package com.HospitalManagement.DTOs;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -10,6 +9,7 @@ import java.time.LocalTime;
 public class LabDTO {
 
     // Creation of Class Members
+    private Long id;
     private Long patientId;
     private Long staffId;
     private Long doctorId;
@@ -24,7 +24,8 @@ public class LabDTO {
     }
 
     // Creation of Constructor
-    public LabDTO(Long patientId, Long staffId, Long doctorId, LocalDate sessionDate, LocalTime startTime, LocalTime endTime, String testResult) {
+    public LabDTO(Long id , Long patientId, Long staffId, Long doctorId, LocalDate sessionDate, LocalTime startTime, LocalTime endTime, String testResult) {
+        this.id = id;
         this.patientId = patientId;
         this.staffId = staffId;
         this.doctorId = doctorId;
@@ -35,6 +36,14 @@ public class LabDTO {
     }
 
     // Creation of Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getPatientId() {
         return patientId;
     }

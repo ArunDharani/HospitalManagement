@@ -2,6 +2,7 @@
 
 // Importing the necessary packages
 package com.HospitalManagement.Services;
+import com.HospitalManagement.DTOConverter.PatientVisitHistoryConverter;
 import com.HospitalManagement.DTOs.PatientVisitHistoryDTO;
 import com.HospitalManagement.Entities.Doctor;
 import com.HospitalManagement.Entities.Patient;
@@ -11,6 +12,8 @@ import com.HospitalManagement.RepositoryInterfaces.PatientRepository;
 import com.HospitalManagement.RepositoryInterfaces.PatientVisitHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,121 +28,139 @@ public class Service_PatientVisitHistory {
     private final PatientRepository _patientRepo;
     private final DoctorRepository _docRepo;
 
+    // Creation of instance of PatientVisitHistoryConverter
+    private final PatientVisitHistoryConverter _converter;
 
     // Creation of constructor to initialize its value
     @Autowired
-    public Service_PatientVisitHistory(PatientVisitHistoryRepository visitRepo , PatientRepository patRepo , DoctorRepository docRepo) {
+    public Service_PatientVisitHistory(PatientVisitHistoryRepository visitRepo , PatientRepository patRepo , DoctorRepository docRepo , PatientVisitHistoryConverter converter) {
         this._visitRepo = visitRepo;
         this._patientRepo = patRepo;
         this._docRepo = docRepo;
+        this._converter = converter;
     }
 
     // Creation of all CRUD operations
 
         // Obtain all visit
-    public List<PatientVisitHistory> showAllVisit() {
-        return _visitRepo.findAll();
+    public List<PatientVisitHistoryDTO> showAllVisit() {
+        // Convert all the visit history into DTO
+        try {
+            // Array to convert entity to DTO
+            List<PatientVisitHistoryDTO> result = new ArrayList<PatientVisitHistoryDTO>();
+
+            _visitRepo.findAll().forEach(visit -> {
+                result.add(_converter.convertToDTO(visit));
+            });
+
+            // returning the result
+            return result;
+        } catch (Exception exception) {
+            throw new RuntimeException("some exception has occurred in the 'showAllVisit' in Service_PatientVisitHistory : \n"+exception.getMessage());
+        }
     }
 
         // Obtain particular visit
-    public Optional<PatientVisitHistory> showThisVisit(Long id) {
-        // First let us check such data exist or not
-        Optional<PatientVisitHistory> currentData = _visitRepo.findById(id);
+    public PatientVisitHistoryDTO showThisVisit(Long id) {
+        try {
+            Optional<PatientVisitHistory> visit = _visitRepo.findById(id);
 
-        if (currentData.isPresent()) {
-            return currentData;
-        } else {
-            return null;
+            // If exist proceeding further
+            if(visit.isPresent()) {
+                return _converter.convertToDTO(visit.get());
+            } else {
+                throw new RuntimeException("No such visit history exist");
+            }
+
+        } catch (Exception exception) {
+            throw new RuntimeException("Some exception has occurred in 'showThisVisit' in Service_PatientVisitHistory : \n"+exception.getMessage());
         }
     }
 
         // Create visit record
-    public PatientVisitHistory createRecord(PatientVisitHistoryDTO visitHistory) {
+    public String createRecord(PatientVisitHistoryDTO visitHistory) {
         try {
             Optional<Patient> patient = _patientRepo.findById(visitHistory.getPatientId());
+            System.out.println("Patient id : "+visitHistory.getPatientId());
             if (patient.isPresent()) {
                 Optional<Doctor> doctor = _docRepo.findById(visitHistory.getDoctorId());
                 if (doctor.isPresent()) {
-                    // Creation of instance and saving it
-                    PatientVisitHistory newData = new PatientVisitHistory();
-                    newData.setVisitDate(visitHistory.getVisitDate());
-                    newData.setVisitTime(visitHistory.getVisitTime());
-                    newData.setReason(visitHistory.getReason());
-                    if (doctor.isPresent()) {
-                        newData.setDoctor(doctor.get());
-                    }
-                    if (patient.isPresent()) {
-                        newData.setPatient(patient.get());
-                    }
 
-                    // retuning the result
-                    return _visitRepo.save(newData);
+                    // Converting the DTO into Entity and Saving the result
+                    PatientVisitHistory visit = new PatientVisitHistory(visitHistory.getVisitDate() , visitHistory.getVisitTime() , patient.get() , doctor.get() , visitHistory.getReason());
+
+                    _visitRepo.save(visit);
+
+                    // returning the result
+                    return "No visit history have been saved successfully";
+
                 } else {
-                    System.out.println("No such doctor record exist");
-                    return null;
+                    return "No such doctor record exist in the parent Database";
                 }
             } else {
-                System.out.println("No such patient record exist");
-                return null;
+                return "No such patient record exist in parent database";
             }
         } catch (Exception exception) {
-            System.out.println("Some Exception has occurred please look into it : \n"+exception);
-            return null;
+            throw new RuntimeException("Some issue has occurred in the 'createRecord' of Service_PatientVisitHistory : \n"+exception.getMessage());
         }
     }
 
         // Updating visit record
-        public PatientVisitHistory updateData(Long id, PatientVisitHistoryDTO visitHistory) {
+        public String updateData(Long id, PatientVisitHistoryDTO visitHistory) {
             try {
-                // Obtaining the current record
-                Optional<PatientVisitHistory> Current = _visitRepo.findById(id);
-                if ( Current.isPresent()) {
+                // First let us check such visit History exists
+                Optional<PatientVisitHistory> visit = _visitRepo.findById(id);
+                if (visit.isPresent()) {
+                    // First let us check such patient details exist
                     Optional<Patient> patient = _patientRepo.findById(visitHistory.getPatientId());
                     if (patient.isPresent()) {
+                        // Finally let us check such doctor record exist
                         Optional<Doctor> doctor = _docRepo.findById(visitHistory.getDoctorId());
                         if (doctor.isPresent()) {
-                            PatientVisitHistory newData = Current.get();
-                            newData.setVisitDate(visitHistory.getVisitDate());
-                            newData.setVisitTime(visitHistory.getVisitTime());
-                            newData.setReason(visitHistory.getReason());
-                            if (doctor.isPresent()) {
-                                newData.setDoctor(doctor.get());
-                            }
-                            if (patient.isPresent()) {
-                                newData.setPatient(patient.get());
-                            }
+                              // Obtaining the record
+                              PatientVisitHistory currentVisit = _converter.convertToEntity(visitHistory);
 
-                            // retuning the result
-                            return _visitRepo.save(newData);
+                              // Now let us update the details
+                              PatientVisitHistory newVisit = visit.get();
+                              newVisit.setVisitTime(currentVisit.getVisitTime());
+                              newVisit.setPatient(patient.get());
+                              newVisit.setVisitDate(currentVisit.getVisitDate());
+                              newVisit.setDoctor(doctor.get());
+                              newVisit.setReason(currentVisit.getReason());
+
+                              // saving the result
+                              _visitRepo.save(newVisit);
+
+                              // returning the result
+                              return "No data has been updated";
                         } else {
-                            System.out.println("No such doctor record exist");
-                            return null;
+                            throw new RuntimeException("No such doctor record exists");
                         }
                     } else {
-                        System.out.println("No such patient record exist");
-                        return null;
+                        throw new RuntimeException("No such patient record exists");
                     }
                 } else {
-                    System.out.println("No such record is found");
-                    return null;
+                    throw new RuntimeException("No such visit history exist");
                 }
             } catch (Exception exception) {
-                System.out.println("Some Exception has occurred please look into it : \n"+exception);
-                return null;
+                return "Some exception has occurred in the 'updateData' function in Service_PatientVisitHistory : \n"+exception.getMessage();
             }
         }
 
         // Deleting record
-    public void removeData(Long id) {
+    public String removeData(Long id) {
         try {
-            Optional<PatientVisitHistory> data = _visitRepo.findById(id);
-            if (data.isEmpty()) {
-                System.out.println("No such data exist");
-            } else {
+            // Checking that particular id exist
+            Optional<PatientVisitHistory> visit = _visitRepo.findById(id);
+
+            if (visit.isPresent()) {
                 _visitRepo.deleteById(id);
+                return "Data has been removed successfully";
+            } else {
+                return "No such data exist";
             }
         } catch (Exception exception) {
-            System.out.println("Some Error has occurred please look into it : "+exception);
+            return "Some exception has occurred in 'removeData' of Service_PatientVisitHistory"+exception.getMessage();
         }
     }
 }

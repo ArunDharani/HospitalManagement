@@ -23,8 +23,8 @@ public class DoctorController {
 
     // obtaining all the doctor details
     @GetMapping("/all")
-    public List<DoctorDTO> getAllDocs() {
-        return serviceDoctor.showAllDoc();
+    public ResponseEntity<List<DoctorDTO>> getAllDocs() {
+        return ResponseEntity.ok(serviceDoctor.showAllDoc());
     }
 
     // obtaining particular doctor detail

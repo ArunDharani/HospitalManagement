@@ -2,6 +2,7 @@
 
 // Importing the necessary packages
 package com.HospitalManagement.Services;
+import com.HospitalManagement.DTOConverter.LabDTOConverter;
 import com.HospitalManagement.DTOs.LabDTO;
 import com.HospitalManagement.Entities.Doctor;
 import com.HospitalManagement.Entities.Lab;
@@ -12,6 +13,11 @@ import com.HospitalManagement.RepositoryInterfaces.LabRepository;
 import com.HospitalManagement.RepositoryInterfaces.PatientRepository;
 import com.HospitalManagement.RepositoryInterfaces.StaffRepository;
 import org.springframework.stereotype.Service;
+
+import javax.print.Doc;
+import javax.swing.*;
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,105 +31,144 @@ public class Service_Lab {
     private final PatientRepository patRepo;
     private final StaffRepository staffRepo;
 
+    // Creation of LabConverter instance
+    private final LabDTOConverter labDTOConverter;
+
     // Creation of constructor
-    public Service_Lab(LabRepository _lab , DoctorRepository docRepo , PatientRepository patRepo , StaffRepository staffRepo) {
+    public Service_Lab(LabRepository _lab , DoctorRepository docRepo , PatientRepository patRepo , StaffRepository staffRepo , LabDTOConverter _labconverter) {
         this.labRepo = _lab;
         this.docRepo = docRepo;
         this.patRepo = patRepo;
         this.staffRepo = staffRepo;
+        this.labDTOConverter = _labconverter;
         System.out.println("Constructor of Service Lab");
     }
 
     // Creation of CRUD methods
-    public List<Lab> getAll() {
-        return labRepo.findAll();
-    }
 
-    public Optional<Lab> get(Long id) {
-        // Obtaining Data
+    // Obtaining all data
+    public List<LabDTO> getAll() {
         try {
-            Optional<Lab> lab = labRepo.findById(id);
-            if (lab.isPresent()) {
-                return lab;
-            } else {
-                return  null;
-            }
-        } catch (Exception exception)  {
-            System.out.println("Some exception has occurred in get specific method of Lab service layer \n"+exception);
-            return null;
-        }
-    }
+            // Converting Entity to DTO
+            List<LabDTO> result = new ArrayList<>();
 
-    public Lab labact(LabDTO lab) {
-        try {
-            // Checking whether the staff , doctor , patient are present
-            Optional<Doctor> doctor = docRepo.findById(lab.getDoctorId());
-            Optional<Patient> patient = patRepo.findById(lab.getPatientId());
-            Optional<Staff> staff = staffRepo.findById(lab.getStaffId());
-            if (doctor.isPresent() && patient.isPresent() && staff.isPresent()) {
-                // Creation of lab visit record
-                Lab lab1 = new Lab();
-                lab1.setDoctor(doctor.get());
-                lab1.setPatient(patient.get());
-                lab1.setStaff(staff.get());
-                lab1.setEndTime(lab.getEndTime());
-                lab1.setStartTime(lab.getStartTime());
-                lab1.setSessionDate(lab.getSessionDate());
-                lab1.setTestResult(lab.getTestResult());
+            labRepo.findAll().forEach(item -> {
+                result.add(labDTOConverter.convertToDTO(item));
+            });
 
-                // saving the record
-                labRepo.save(lab1);
-                System.out.println("new lab record is created");
-                return lab1;
-            } else {
-                System.out.println("Provide valid input");
-                return null;
-            }
+            // returning the result
+            return result;
         } catch (Exception exception) {
-            System.out.println("Some issue occured in lab service layer\n"+exception);
-            return null;
+            throw new RuntimeException("Some error has occurred in the 'getall' function in Service_lab : "+exception.getMessage());
         }
     }
 
-    public Lab updateData(Long id , LabDTO lab) {
+    // Obtaining specific DTO
+    public LabDTO get(Long id) {
+       try {
+           // Obtaining the data
+           Optional<Lab> data = labRepo.findById(id);
+           if (data.isPresent()) {
+               return labDTOConverter.convertToDTO(data.get());
+           } else {
+               throw new RuntimeException("No such lab data exists");
+           }
+       } catch (Exception exception) {
+           throw new RuntimeException("Some Error has occurred in the 'get' function in Service_lab ");
+       }
+    }
+
+    // Creating new Data in database
+    public String createLabData(LabDTO lab) {
         try {
-            Optional<Lab> lab1 = labRepo.findById(id);
-            if (lab1.isPresent()) {
-                // Now checking the updated staff , doctor , patient are present
-                Optional<Staff> staff = staffRepo.findById(lab.getStaffId());
+           // Let us perform nested checking
+            Optional<Doctor> doctor = docRepo.findById(lab.getDoctorId());
+            if (doctor.isPresent()) {
                 Optional<Patient> patient = patRepo.findById(lab.getPatientId());
-                Optional<Doctor> doctor = docRepo.findById(lab.getDoctorId());
-                if (staff.isPresent() && patient.isPresent() && doctor.isPresent()) {
-                    Lab newData = new Lab();
-                    newData = lab1.get();
-                    newData.setTestResult(lab.getTestResult());
-                    newData.setSessionDate(lab.getSessionDate());
-                    newData.setStartTime(lab.getStartTime());
-                    newData.setEndTime(lab.getEndTime());
-                    newData.setStaff(staff.get());
-                    newData.setPatient(patient.get());
-                    newData.setDoctor(doctor.get());
+                if (patient.isPresent()) {
+                    Optional<Staff> staff = staffRepo.findById(lab.getStaffId());
+                    if (staff.isPresent()) {
+                        // Creating new Data
+                        Lab newData = new Lab();
+                        newData.setDoctor(doctor.get());
+                        newData.setPatient(patient.get());
+                        newData.setStaff(staff.get());
+                        newData.setEndTime(lab.getEndTime());
+                        newData.setSessionDate(lab.getSessionDate());
+                        newData.setStartTime(lab.getStartTime());
+                        newData.setTestResult(lab.getTestResult());
+                        // Saving the result
+                        labRepo.save(newData);
 
-                    // saving the record
-                    labRepo.save(newData);
-
-                    System.out.println("Lab data has been updated successfully");
-                    return newData;
+                        // result
+                        return "New lab record has been saved";
+                    } else {
+                        throw new RuntimeException("No such staff data exist");
+                    }
                 } else {
-                    System.out.println("Please provide correct values");
-                    return null;
+                    throw new RuntimeException("No such patient data exist");
                 }
             } else {
-                System.out.println("No such lab record exist");
-                return null;
+                throw new RuntimeException("No such doctor data exist");
             }
         } catch (Exception exception) {
-            System.out.println("Some exception has occurred during the updating lab data\n"+exception);
-            return null;
+            throw new RuntimeException("Some error has occurred in 'createLabData' in Service_Lab class : "+exception.getMessage());
         }
     }
 
-    public void deleteRecord(Long id) {
-        labRepo.deleteById(id);
+    public String updateData(Long id , LabDTO _lab) {
+        try {
+            // Let us check particular data exist
+            Optional<Lab> lab = labRepo.findById(id);
+            if (lab.isPresent()) {
+                Optional<Doctor> doctor = docRepo.findById(_lab.getDoctorId());
+                if (doctor.isPresent()) {
+                    Optional<Patient> patient = patRepo.findById(_lab.getPatientId());
+                    if (patient.isPresent()) {
+                        Optional<Staff> staff = staffRepo.findById(_lab.getStaffId());
+                        if (staff.isPresent()) {
+                            Lab newLab = lab.get();
+                            newLab.setStartTime(_lab.getStartTime());
+                            newLab.setSessionDate(_lab.getSessionDate());
+                            newLab.setEndTime(_lab.getEndTime());
+                            newLab.setStaff(staff.get());
+                            newLab.setDoctor(doctor.get());
+                            newLab.setPatient(patient.get());
+
+                            // Saving the result
+                            labRepo.save(newLab);
+
+                            // Returning the result
+                            return "Data has been updated successfully";
+                        } else {
+                            throw new RuntimeException("No such staff record exist");
+                        }
+                    } else {
+                        throw new RuntimeException("No such patient record exist");
+                    }
+                } else {
+                    throw new RuntimeException("No such Doctor record exist");
+                }
+            } else {
+                throw new RuntimeException("No such Lab record exists");
+            }
+        } catch (Exception exception) {
+            throw new RuntimeException("Some error has occurred in 'updateData' function in Service_Lab : "+exception.getMessage());
+        }
+    }
+
+    public String deleteRecord(Long id) {
+        try {
+            // Checking whether the data related to id exist
+            Optional<Lab> currentData = labRepo.findById(id);
+            if (currentData.isPresent()) {
+                labRepo.deleteById(id);
+                return "Data has been removed successfully";
+            } else {
+                throw new RuntimeException("No such data to be deleted");
+            }
+        } catch (Exception exception) {
+            throw new RuntimeException("Some error has occurred in the 'deleteRecord' function of Service_lab : "+exception.getMessage());
+        }
     }
 }

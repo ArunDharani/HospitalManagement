@@ -24,7 +24,7 @@ public class PatientVisitHistoryDTO {
     }
 
     // Creation of parameterized constructor
-    public PatientVisitHistoryDTO(Long id  , LocalDate visitDate, LocalTime visitTime, Long patientId, Long doctorId, String reason) {
+    public PatientVisitHistoryDTO(Long id , LocalDate visitDate, LocalTime visitTime, Long patientId, Long doctorId, String reason) {
         this.id = id;
         this.visitDate = visitDate;
         this.visitTime = visitTime;

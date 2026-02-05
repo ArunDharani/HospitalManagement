@@ -2,10 +2,7 @@
 
 // Importing the necessary packages
 package com.HospitalManagement.Entities;
-
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -34,6 +31,17 @@ public class Lab {
     // Creation of default Constructor
     public Lab() {
         System.out.println("Lab Entity layer has been created");
+    }
+
+    // Creation of Parameterized constructor
+    public Lab(LocalDate sessionDate, LocalTime startTime, LocalTime endTime, String testResult, Patient patient, Doctor doctor, Staff staff) {
+        this.sessionDate = sessionDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.testResult = testResult;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.staff = staff;
     }
 
     // Creation of Foreign key members

@@ -25,8 +25,8 @@ public class PatientController {
 
     // Creation of all the CRUD methods
     @GetMapping("/all")
-    public List<PatientDTO> getAllPatient() {
-        return servicePatient.showAllPatient();
+    public ResponseEntity<List<PatientDTO>> getAllPatient() {
+        return ResponseEntity.ok(servicePatient.showAllPatient());
     }
 
     @GetMapping("/{_id}")

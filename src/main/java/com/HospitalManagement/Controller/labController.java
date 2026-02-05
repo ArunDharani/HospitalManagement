@@ -28,32 +28,31 @@ public class labController {
     // Creation of all CRUD apis
         // GET ALL
     @GetMapping("/all")
-    public List<Lab> getAll() {
-        return serviceLab.getAll();
+    public ResponseEntity<List<LabDTO>> getAll() {
+        return ResponseEntity.ok(serviceLab.getAll());
     }
 
         // GET specific data
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Lab>> getbyId(@PathVariable Long id){
+    public ResponseEntity<LabDTO> getbyId(@PathVariable Long id){
         return ResponseEntity.ok(serviceLab.get(id));
     }
 
         // POST data
     @PostMapping("/create")
-    public ResponseEntity<Lab> postData(@RequestBody LabDTO labdto) {
-        return ResponseEntity.ok(serviceLab.labact(labdto));
+    public ResponseEntity<String> postData(@RequestBody LabDTO labdto) {
+        return ResponseEntity.ok(serviceLab.createLabData(labdto));
     }
 
         // Update data
     @PutMapping("/{id}")
-    public ResponseEntity<Lab> updateData(@PathVariable Long id , @RequestBody LabDTO labDTO) {
+    public ResponseEntity<String> updateData(@PathVariable Long id , @RequestBody LabDTO labDTO) {
         return ResponseEntity.ok(serviceLab.updateData(id , labDTO));
     }
 
         // Delete data
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteData(@PathVariable Long id){
-        serviceLab.deleteRecord(id);
-        return ResponseEntity.ok("Data has been removed successfully");
+        return ResponseEntity.ok(serviceLab.deleteRecord(id));
     }
 }

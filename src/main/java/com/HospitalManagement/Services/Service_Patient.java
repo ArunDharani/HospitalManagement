@@ -52,15 +52,13 @@ public class Service_Patient {
     public List<PatientDTO> showAllPatient() {
         try {
             // Creation of array to store all the DTO
-            List<PatientDTO> _allpatients = new ArrayList<PatientDTO>();
+            List<PatientDTO> _allPatients = new ArrayList<>();
 
             // Now converting all patient Entity to patientDTO
-            _patientRepo.findAll().forEach(patient -> {
-                _allpatients.add(_converter.EntitytoDTO(patient));
-            });
+            _patientRepo.findAll().forEach(patient -> _allPatients.add(_converter.EntitytoDTO(patient)));
 
             // returning the result
-            return _allpatients;
+            return _allPatients;
 
         } catch (Exception exception) {
             throw new RuntimeException("Some exception has occurred while obtaining all the patient details in 'showAllPatient' function in Service Patient : \n"+exception.getMessage());
@@ -72,11 +70,12 @@ public class Service_Patient {
         try {
             // Let us check that particular data exist
             Optional<Patient> patient = _patientRepo.findById(id);
-
+            System.out.println("patient id inside DTO "+id);
+            System.out.println("Data is : "+patient.isPresent());
             if (patient.isPresent()) {
                 return _converter.EntitytoDTO(patient.get());
             } else {
-                throw new RuntimeException("No such patient record exist");
+                throw new RuntimeException("No such patient record exist as per Patient Database + ");
             }
         } catch (Exception exception) {
             throw new RuntimeException("Some Error has occurred in the function 'showPatientDetail' function in Service Patient : \n"+exception.getMessage());
@@ -84,7 +83,7 @@ public class Service_Patient {
     }
 
     // Updating the existing patient record
-    public ResponseEntity<String> updatePatientRecord(Long id , PatientDTO _patient) {
+    public ResponseEntity<@NotNull String> updatePatientRecord(Long id , PatientDTO _patient) {
         try {
             // First let us check that particular data exist or not
             Optional<Patient> existPatient = _patientRepo.findById(id);
