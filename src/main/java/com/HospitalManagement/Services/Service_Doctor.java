@@ -34,6 +34,18 @@ public class Service_Doctor {
             // Let us obtain the doctor object from 'DoctorDTOConverter' clas
             Doctor doctor = converter.convertToEntity(doctorDTO);
 
+            // Let us cross-check the email for validation
+            if ( !doctor.getEmail().contains(".com") || !doctor.getEmail().contains(String.valueOf('@'))) {
+                throw new RuntimeException("It is not a proper email");
+            }
+
+            // Let us prevent only unique email is allowed
+            doctorRepository.findAll().forEach(doctor1 -> {
+                if (doctor1.getEmail().equals(doctorDTO.getEmail())) {
+                    throw new RuntimeException("Already user exist");
+                }
+            });
+
             // Saving the data in the database
             doctorRepository.save(doctor);
 
@@ -95,6 +107,18 @@ public class Service_Doctor {
 
                 // Converting the DTO into Entity Domain
                 Doctor newData = converter.convertToEntity(doctorDTO);
+
+                // Cross-Checking the email
+                if (!newData.getEmail().contains(".com") || !newData.getEmail().contains(String.valueOf('@'))) {
+                    throw new RuntimeException("It is not a valid email");
+                }
+
+                // Only unique email exist
+                doctorRepository.findAll().forEach(doctor -> {
+                    if (doctor.getEmail().equals(doctorDTO.getEmail())) {
+                        throw new RuntimeException("Only unique mail is allowed");
+                    }
+                });
 
                 // Updating all the detail by creating new instance
                 Doctor doctor = currentDoctor.get();

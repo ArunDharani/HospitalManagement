@@ -37,6 +37,17 @@ public class Service_Patient {
             // Creation of new Patient instance
             Patient newPatient = _converter.DTOtoEntity(_patient);
 
+            // Cross-Checking email validation and uniqueness
+            if ( !newPatient.getEmail().contains(".com") || !newPatient.getEmail().contains(String.valueOf('@'))) {
+                throw new RuntimeException("Provide valid email");
+            }
+
+            _patientRepo.findAll().forEach(patient -> {
+                if (patient.getEmail().equals(newPatient.getEmail())) {
+                    throw new RuntimeException("Patient already exists");
+                }
+            });
+
             // saving the result
             _patientRepo.save(newPatient);
 
@@ -70,8 +81,7 @@ public class Service_Patient {
         try {
             // Let us check that particular data exist
             Optional<Patient> patient = _patientRepo.findById(id);
-            System.out.println("patient id inside DTO "+id);
-            System.out.println("Data is : "+patient.isPresent());
+
             if (patient.isPresent()) {
                 return _converter.EntitytoDTO(patient.get());
             } else {
@@ -89,6 +99,18 @@ public class Service_Patient {
             Optional<Patient> existPatient = _patientRepo.findById(id);
 
             if (existPatient.isPresent()) {
+
+                // Cross-Checking email validation and uniqueness
+                if ( !existPatient.get().getEmail().contains(".com") || !existPatient.get().getEmail().contains(String.valueOf('@'))) {
+                    throw new RuntimeException("Provide valid email");
+                }
+
+                _patientRepo.findAll().forEach(patient -> {
+                    if (patient.getEmail().equals(_patient.getEmail())) {
+                        throw new RuntimeException("Patient already exists");
+                    }
+                });
+
                 // Now let us update the data
                 Patient updatedPatient = existPatient.get();
                 updatedPatient.setName(_patient.getName());

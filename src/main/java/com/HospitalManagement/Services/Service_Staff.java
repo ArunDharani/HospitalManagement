@@ -36,6 +36,17 @@ public class Service_Staff {
             // Converting DTO to Entity
             Staff newstaff = _converter.convetToEntity(_staff);
 
+            // Cross-Checking the email validation and uniqueness
+            if ( !newstaff.getEmail().contains(".com") || !newstaff.getEmail().contains(String.valueOf('@'))) {
+                throw new RuntimeException("Provide valid email");
+            }
+
+            _staffrepo.findAll().forEach(staff -> {
+                if (staff.getEmail().equals(_staff.getEmail())) {
+                    throw new RuntimeException("Staff Already exists");
+                }
+            });
+
             // saving the result
             _staffrepo.save(newstaff);
 
@@ -84,6 +95,17 @@ public class Service_Staff {
             // Let us check whether such staff exist
             Optional<Staff> currentStaff = _staffrepo.findById(id);
             if (currentStaff.isPresent()) {
+
+                // Cross-Checking the email validation and uniqueness
+                if (!currentStaff.get().getEmail().contains(".com") || !currentStaff.get().getEmail().contains(String.valueOf('@'))) {
+                    throw new RuntimeException("Provide me valid email");
+                }
+
+                _staffrepo.findAll().forEach(staff -> {
+                    if (staff.getEmail().equals(currentStaff.get().getEmail())) {
+                        throw new RuntimeException("Staff already exists");
+                    }
+                });
 
                 Staff newStaff = currentStaff.get();
                 newStaff.setName(_staff.getName());
