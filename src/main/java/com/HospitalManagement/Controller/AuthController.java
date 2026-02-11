@@ -4,10 +4,7 @@
 package com.HospitalManagement.Controller;
 import com.HospitalManagement.DTOs.AdminDTO;
 import com.HospitalManagement.Services.Service_Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 // Creation of controller
 @RestController
@@ -31,4 +28,20 @@ public class AuthController {
             throw new RuntimeException("Cause : "+e.getCause()+"\nMessage : "+e.getMessage()+"\nPath : "+e.getStackTrace());
         }
     }
+
+    // Testing Api Method
+    @GetMapping("/obtain")
+    public String getData(@RequestHeader("Authorization") String token) {
+        try {
+            if (token != null && token.startsWith("Bearer ")) {
+                return serviceJwt.extractUserEmail(token.substring(7));
+            } else {
+                return "record type is invalid";
+            }
+        } catch (Exception exception) {
+            throw new RuntimeException("Some error has occured please look into this :"+exception.getMessage());
+        }
+    }
+
+    // My random comments from daughter branch
 }
