@@ -3,6 +3,7 @@ package com.HospitalManagement.Controller;
 import com.HospitalManagement.DTOs.DoctorDTO;
 import com.HospitalManagement.Entities.Doctor;
 import com.HospitalManagement.Services.Service_Doctor;
+import com.HospitalManagement.Services.Service_Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/doctor")
 public class DoctorController {
 
-    // Creation of instance of the 'ServiceDoctor'
+    // Creation of instance of the 'ServiceDoctor' and 'ServiceJwt'
     private final Service_Doctor serviceDoctor;
 
     @Autowired
@@ -23,8 +24,8 @@ public class DoctorController {
 
     // obtaining all the doctor details
     @GetMapping("/all")
-    public ResponseEntity<List<DoctorDTO>> getAllDocs() {
-        return ResponseEntity.ok(serviceDoctor.showAllDoc());
+    public ResponseEntity<List<DoctorDTO>> getAllDocs(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(serviceDoctor.showAllDoc(token));
     }
 
     // obtaining particular doctor detail

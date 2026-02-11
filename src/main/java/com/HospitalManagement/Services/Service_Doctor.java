@@ -15,16 +15,18 @@ import java.util.Optional;
 @Service
 public class Service_Doctor {
 
-    // Creation of instance of DoctorRepository
+    // Creation of instance of DoctorRepository and Service_Jwt
     private final DoctorRepository doctorRepository;
+    private final Service_Jwt serviceJwt;
 
     // Creation of instance of DoctorDTOConverter
     private final DoctorDTOConverter converter;
 
     @Autowired
-    public Service_Doctor(DoctorRepository doctorRepository , DoctorDTOConverter _converter) {
+    public Service_Doctor(DoctorRepository doctorRepository , DoctorDTOConverter _converter , Service_Jwt serviceJwt) {
         this.doctorRepository = doctorRepository;
         this.converter = _converter;
+        this.serviceJwt = serviceJwt;
         System.out.println("Instance has been created in Service_Doctor class");
     }
 
@@ -58,19 +60,28 @@ public class Service_Doctor {
     }
 
     // Obtaining all doctor details
-    public List<DoctorDTO> showAllDoc() {
+    public List<DoctorDTO> showAllDoc(String token) {
         try {
+            // Let us verify the token
+            if (token != null && token.startsWith("Bearer ")) {
+                String Email =  serviceJwt.extractUserEmail(token.substring(7));
+                if (Email.contains("@admin.com")) {
+                    // Creation of array to store the doctorsDTo
+                    List<DoctorDTO> doctorDTOS = new ArrayList<>();
 
-            // Creation of array to store the doctorsDTo
-            List<DoctorDTO> doctorDTOS = new ArrayList<>();
+                    // Now converting each 'Doctor' object to 'DoctorDTO' object
+                    doctorRepository.findAll().forEach(currentDoctor -> {
+                        doctorDTOS.add(converter.convertToDTO(currentDoctor));
+                    });
 
-            // Now converting each 'Doctor' object to 'DoctorDTO' object
-            doctorRepository.findAll().forEach(currentDoctor -> {
-                doctorDTOS.add(converter.convertToDTO(currentDoctor));
-            });
-            
-            // returning the result
-            return doctorDTOS;
+                    // returning the result
+                    return doctorDTOS;
+                } else {
+                    throw new RuntimeException("Unauthorized");
+                }
+            } else {
+                throw new RuntimeException("Token is invalid");
+            }
             
         } catch (Exception exception) {
             throw new RuntimeException("Some Problem as occurred during the execution of 'showAll' function in Service Doctor class\nPlease look into this : "+exception);
