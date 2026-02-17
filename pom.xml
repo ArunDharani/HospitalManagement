@@ -113,6 +113,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Source: https://mvnrepository.com/artifact/com.github.timols/seeder -->
+        <dependency>
+            <groupId>com.github.timols</groupId>
+            <artifactId>seeder</artifactId>
+            <version>0.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
 	<build>
