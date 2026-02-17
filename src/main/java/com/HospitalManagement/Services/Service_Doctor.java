@@ -66,7 +66,7 @@ public class Service_Doctor {
             if (token != null && token.startsWith("Bearer ")) {
                 String Email =  serviceJwt.extractUserEmail(token.substring(7));
                 if (Email.contains("@admin.com")) {
-                    // Creation of array to store the doctorsDTo
+                    // Creation of array to store the doctorsDTO
                     List<DoctorDTO> doctorDTOS = new ArrayList<>();
 
                     // Now converting each 'Doctor' object to 'DoctorDTO' object

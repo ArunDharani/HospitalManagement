@@ -29,13 +29,6 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-//            // Let us obtain the path
-//            String path = request.getServletPath();
-//            if (path.startsWith("/auth")) {
-//                filterChain.doFilter(request ,response);
-//                return;
-//            }
-
             // Obtaining the token
             String entireToken = request.getHeader("Authorization");
             // Verifying the token
