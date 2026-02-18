@@ -4,7 +4,9 @@
 package com.HospitalManagement.Controller;
 import com.HospitalManagement.DTOs.AdminDTO;
 import com.HospitalManagement.Services.Service_Jwt;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 // Creation of controller
 @RestController
@@ -39,9 +41,20 @@ public class AuthController {
                 return "record type is invalid";
             }
         } catch (Exception exception) {
-            throw new RuntimeException("Some error has occured please look into this :"+exception.getMessage());
+            throw new RuntimeException("Some error has occurred please look into this :"+exception.getMessage());
         }
     }
 
-    // My random comments from daughter branch
+    // Creation of api for getting all the admins
+    @GetMapping("/allAdmin")
+    public ResponseEntity<List<AdminDTO>> getAllAdmin(@RequestHeader("Authorization") String token){
+            return ResponseEntity.ok(serviceJwt.viewAllAdmins(token));
+    }
+
+    // Creation of Api to insert new Admin Data
+    @PostMapping("/appointAdmin")
+    public ResponseEntity<String> hireAdmin(@RequestHeader("Authorization") String token , @RequestBody AdminDTO adminDTO) {
+        return ResponseEntity.ok(serviceJwt.createAdmin(token , adminDTO));
+    }
+
 }

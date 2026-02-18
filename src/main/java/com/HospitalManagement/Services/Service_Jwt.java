@@ -43,7 +43,7 @@ public class Service_Jwt {
     public String generateToken(AdminDTO adminDTO) {
         return Jwts.builder()
                 .setSubject(adminDTO.getEmail())
-                .setAudience(adminDTO.getName())
+                .setAudience(adminDTO.getPassword())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
@@ -61,7 +61,7 @@ public class Service_Jwt {
     }
 
     // Creation of Function to extract userName
-    public String extractUserName(String token) {
+    public String extractUserPassword(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .build()
@@ -75,23 +75,31 @@ public class Service_Jwt {
         try {
             // Let us verify the token
             if (token != null && token.startsWith("Bearer ")) {
+
+                // Obtaining the email and password
                 String Email = extractUserEmail(token.substring(7));
-                if (Email.contains("@admin.com")) {
-                    // Creation of array to store the AdminDTO
-                    List<AdminDTO> adminsDTO = new ArrayList<>();
+                String password = extractUserPassword(token.substring(7));
 
-                    // Now converting each 'Admin' object to AdminDTO object
-                    adminRepository.findAll().forEach(currentAdmin ->  {
-                        adminsDTO.add(converter.convertToDTO(currentAdmin));
-                    });
+                // first let us check that particular email exist in the database
+                boolean doExist = adminRepository.findAll().stream().anyMatch(admin -> ( admin.getEmail().equals(Email) && admin.getPassword().equals(password) ));
 
-                    // Returning the results
-                    return adminsDTO;
-                } else {
-                    throw new RuntimeException("Unauthorized");
+                if (!doExist) {
+                    throw new RuntimeException("UnAuthorized");
                 }
+
+                // Array to store all the admin DTO
+                List<AdminDTO> adminDTOS = new ArrayList<>();
+
+                // Converting all admin Entity to DTO
+                adminRepository.findAll().forEach(currentAdmin -> {
+                    adminDTOS.add(converter.convertToDTO(currentAdmin));
+                });
+
+                // returning the result
+                return adminDTOS;
+
             } else {
-                throw new RuntimeException("Token is invalid");
+                throw new RuntimeException("Invalid Authorization");
             }
         } catch (Exception exception) {
             throw new RuntimeException("Some error has occurred in 'viewAllAdmins' function in Service_Jwt : \n"+exception.getMessage());
@@ -104,37 +112,42 @@ public class Service_Jwt {
             // Let us verify the token
             if (token != null && token.startsWith("Bearer ")) {
                 String Email = extractUserEmail(token.substring(7));
-                if (Email.contains("@admin.com")) {
+                String Password = extractUserPassword(token.substring(7));
 
-                    Admin admin = converter.convertToEntity(adminDTO);
+                // first let us check that particular email exist in the database
+                boolean doExist = adminRepository.findAll().stream().anyMatch(admin -> ( admin.getEmail().equals(Email) && admin.getPassword().equals(Password) ));
 
-                    // Let us cross-check the email for validation
-                    if ( !admin.getEmail().contains("@admin.com")) {
-                        throw new RuntimeException("It is not a proper email");
-                    }
-
-                    // Let us prevent only unique email is allowed
-                    adminRepository.findAll().forEach(admin1 -> {
-                        if (admin1.getEmail().equals(adminDTO.getEmail())) {
-                            throw new RuntimeException("Already user exists");
-                        }
-                    });
-
-                    // Saving the data in the database
-                    adminRepository.save(admin);
-
-
-                    // returning the result
-                    return "New Admin Data has been included";
-
-                } else {
-                    throw new RuntimeException("Unauthorized");
+                // Cross-Checking
+                if (!doExist) {
+                    throw new RuntimeException("UnAuthorized");
                 }
+
+                // Let us prevent only unique email is allowed
+                adminRepository.findAll().forEach(admin1 -> {
+                    if (admin1.getEmail().equals(adminDTO.getEmail())) {
+                        throw new RuntimeException("Already user exists");
+                    }
+                });
+
+                // Let us cross-check the email for validation
+                if ( !adminDTO.getEmail().contains("@admin.com")) {
+                    throw new RuntimeException("It is not a proper email");
+                }
+
+                // Converting the Entity to DTO
+                Admin admin = converter.convertToEntity(adminDTO);
+
+                // Saving the data in the database
+                adminRepository.save(admin);
+
+                // returning the result
+                return "New Admin Data has been included";
+
             } else {
                 throw new RuntimeException("Token is invalid");
             }
         } catch (Exception exception) {
-            throw new RuntimeException("Some error has occurred in 'viewAllAdmins' function in Service_Jwt : \n"+exception.getMessage());
+            throw new RuntimeException("Some error has occurred in 'createAdmin' function in Service_Jwt : \n"+exception.getMessage());
         }
     }
 

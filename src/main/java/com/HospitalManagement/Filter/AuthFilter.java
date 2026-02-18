@@ -35,7 +35,7 @@ public class AuthFilter extends OncePerRequestFilter {
             if (entireToken != null && entireToken.startsWith("Bearer ")) {
                 // Extracting the data from token
                 String email = serviceJwt.extractUserEmail(entireToken.substring(7));
-                String name = serviceJwt.extractUserName(entireToken.substring(7));
+                String name = serviceJwt.extractUserPassword(entireToken.substring(7));
                 if (email != null && name != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     // Creation of Token using 'UserNamePasswordAuthenticationToken' class
                     UsernamePasswordAuthenticationToken newAuthToken = new UsernamePasswordAuthenticationToken(email , null, List.of());
