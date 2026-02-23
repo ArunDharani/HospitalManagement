@@ -118,7 +118,7 @@ public class Service_PatientVisitHistory {
                         Optional<Doctor> doctor = _docRepo.findById(visitHistory.getDoctorId());
                         if (doctor.isPresent()) {
                               // Obtaining the record
-                              PatientVisitHistory currentVisit = _converter.convertToEntity(visitHistory);
+                              PatientVisitHistory currentVisit = _converter.convertToEntity(visitHistory , "ok");
 
                               // Now let us update the details
                               PatientVisitHistory newVisit = visit.get();
