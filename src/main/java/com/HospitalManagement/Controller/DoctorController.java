@@ -1,6 +1,5 @@
 // File Created by Arun on (29/1/26)
 
-
 // Importing the necessary packages
 package com.HospitalManagement.Controller;
 import com.HospitalManagement.DTOs.DoctorDTO;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 // Creation of 'DoctorController'
 @RestController
@@ -26,13 +26,13 @@ public class DoctorController {
 
     // Obtaining the available doctor details
     @GetMapping("/all")
-    public ResponseEntity<List<DoctorDTO>> getAllDocs(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<CompletableFuture<List<DoctorDTO>>> getAllDocs(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(serviceDoctor.showAllDoc(token));
     }
 
     // Obtaining the specific doctor details
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorDTO> getDocById(@PathVariable Long id , @RequestHeader("Authorization") String token) {
+    public ResponseEntity<CompletableFuture<DoctorDTO>> getDocById(@PathVariable Long id , @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(serviceDoctor.showDetail(id , token));
     }
 

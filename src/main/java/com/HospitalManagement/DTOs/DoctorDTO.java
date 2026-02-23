@@ -3,6 +3,7 @@
 // Importing the necessary packages
 package com.HospitalManagement.DTOs;
 import java.time.LocalTime;
+import java.util.concurrent.CompletableFuture;
 
 // Creation of Doctor DTO
 public class DoctorDTO {
