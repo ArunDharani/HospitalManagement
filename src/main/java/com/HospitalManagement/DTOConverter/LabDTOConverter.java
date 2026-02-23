@@ -42,7 +42,7 @@ public class LabDTOConverter {
     }
 
     // Creation of function to convert from DTO to Entity
-    public Lab convertToEntity(LabDTO labDTO) {
-        return new Lab(labDTO.getSessionDate() , labDTO.getStartTime() , labDTO.getEndTime() , labDTO.getTestResult(), patientDTOConverter.DTOtoEntity(servicePatient.showPatientDetail(labDTO.getPatientId())) , doctorDTOConverter.convertToEntity(serviceDoctor.showDetail(labDTO.getDoctorId())) , staffDTOConverter.convetToEntity(serviceStaff.getstaffDetail(labDTO.getStaffId())));
+    public Lab convertToEntity(LabDTO labDTO , String token) {
+        return new Lab(labDTO.getSessionDate() , labDTO.getStartTime() , labDTO.getEndTime() , labDTO.getTestResult(), patientDTOConverter.DTOtoEntity(servicePatient.showPatientDetail(labDTO.getPatientId())) , doctorDTOConverter.convertToEntity(serviceDoctor.showDetail(labDTO.getDoctorId() , token)) , staffDTOConverter.convetToEntity(serviceStaff.getstaffDetail(labDTO.getStaffId())));
     }
 }
