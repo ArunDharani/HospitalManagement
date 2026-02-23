@@ -26,27 +26,27 @@ public class StaffController {
 
     // Creation of CRUD controllers
     @GetMapping("/all")
-    public ResponseEntity<List<StaffDTO>> getallStaff() {
-        return ResponseEntity.ok(serviceStaff.getAllStaff());
+    public ResponseEntity<List<StaffDTO>> getallStaff(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(serviceStaff.getAllStaff(token));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StaffDTO> getSpecificStaff(@PathVariable Long id) {
-        return ResponseEntity.ok(serviceStaff.getstaffDetail(id));
+    public ResponseEntity<StaffDTO> getSpecificStaff(@PathVariable Long id , @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(serviceStaff.getstaffDetail(id ,token));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> hireStaff(@RequestBody StaffDTO staff) {
-        return ResponseEntity.ok(serviceStaff.hireStaff(staff));
+    public ResponseEntity<String> hireStaff(@RequestBody StaffDTO staff , @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(serviceStaff.hireStaff(staff , token));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateStaffDetail(@PathVariable Long id , @RequestBody StaffDTO _staff) {
-        return ResponseEntity.ok(serviceStaff.updateStaffRecord(id , _staff));
+    public ResponseEntity<String> updateStaffDetail(@PathVariable Long id , @RequestBody StaffDTO _staff, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(serviceStaff.updateStaffRecord(id , _staff , token));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeStaff(@PathVariable Long id) {
-        return ResponseEntity.ok(serviceStaff.removeStaff(id));
+    public ResponseEntity<String> removeStaff(@PathVariable Long id , @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(serviceStaff.removeStaff(id , token));
     }
 }
