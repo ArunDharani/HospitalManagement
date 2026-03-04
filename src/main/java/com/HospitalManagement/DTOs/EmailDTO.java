@@ -25,6 +25,13 @@ public class EmailDTO {
         this.subject = subject;
     }
 
+    // Creation of another parameterized constructor
+    public EmailDTO(String receiver, String message, String subject) {
+        this.receiver = receiver;
+        this.message = message;
+        this.subject = subject;
+    }
+
     // Creation of Getters and Setters
     public Long getId() {
         return id;
