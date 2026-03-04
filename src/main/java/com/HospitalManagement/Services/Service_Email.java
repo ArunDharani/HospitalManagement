@@ -53,7 +53,6 @@ public class Service_Email {
             // saving the contents
             _emailRepo.save(newEmail);
 
-
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new RuntimeException("Some error has occurred in 'sendEmail' function in Service_Email : "+exception.getMessage());

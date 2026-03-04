@@ -40,7 +40,21 @@ public class PatientVisitHistoryConverter {
     }
 
     // Creation of function to convert from DTO to Entity
-    public PatientVisitHistory convertToEntity(PatientVisitHistoryDTO patientVisitHistoryDTO ,String token) {
-        return new PatientVisitHistory(patientVisitHistoryDTO.getVisitDate() , patientVisitHistoryDTO.getVisitTime() , patientDTOConverter.DTOtoEntity(servicePatient.showPatientDetail(patientVisitHistoryDTO.getPatientId())) ,  doctorDTOConverter.convertToEntity(serviceDoctor.showDetail(patientVisitHistoryDTO.getDoctorId() , token)) , patientVisitHistoryDTO.getReason());
+//    public PatientVisitHistory convertToEntity(PatientVisitHistoryDTO patientVisitHistoryDTO ,String token) {
+//        return new PatientVisitHistory(patientVisitHistoryDTO.getVisitDate() , patientVisitHistoryDTO.getVisitTime() , patientDTOConverter.DTOtoEntity(servicePatient.showPatientDetail(patientVisitHistoryDTO.getPatientId())) ,  doctorDTOConverter.convertToEntity(serviceDoctor.showDetail(patientVisitHistoryDTO.getDoctorId() , token)) , patientVisitHistoryDTO.getReason());
+//    }
+
+    public PatientVisitHistory convertToEntity(PatientVisitHistoryDTO dto, String token) {
+        return new PatientVisitHistory(
+                dto.getVisitDate(),
+                dto.getVisitTime(),
+                patientDTOConverter.DTOtoEntity(
+                        servicePatient.showPatientDetail(dto.getPatientId())
+                ),
+                doctorDTOConverter.convertToEntity(
+                        serviceDoctor.showDetail(dto.getDoctorId(), token).join()
+                ),
+                dto.getReason()
+        );
     }
 }

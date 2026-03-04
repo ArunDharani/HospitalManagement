@@ -3,6 +3,7 @@
 // Importing the all necessary packages
 package com.HospitalManagement.DTOConverter;
 
+import com.HospitalManagement.DTOs.DoctorDTO;
 import com.HospitalManagement.DTOs.LabDTO;
 import com.HospitalManagement.Entities.Lab;
 import com.HospitalManagement.Services.Service_Doctor;
@@ -10,6 +11,8 @@ import com.HospitalManagement.Services.Service_Patient;
 import com.HospitalManagement.Services.Service_Staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.CompletableFuture;
 
 // Creation of Entity DTO converter for Lab class
 @Component
@@ -42,7 +45,32 @@ public class LabDTOConverter {
     }
 
     // Creation of function to convert from DTO to Entity
-    public Lab convertToEntity(LabDTO labDTO , String token) {
-        return new Lab(labDTO.getSessionDate() , labDTO.getStartTime() , labDTO.getEndTime() , labDTO.getTestResult(), patientDTOConverter.DTOtoEntity(servicePatient.showPatientDetail(labDTO.getPatientId())) , doctorDTOConverter.convertToEntity(serviceDoctor.showDetail(labDTO.getDoctorId() , token)) , staffDTOConverter.convetToEntity(serviceStaff.getstaffDetail(labDTO.getStaffId() , token)));
+//    public Lab convertToEntity(LabDTO labDTO , String token) {
+//        // First obtaining the data of doctor
+//        CompletableFuture<DoctorDTO> doctorFuture =
+//                serviceDoctor.showDetail(labDTO.getDoctorId(), token);
+//        return doctorFuture.thenApply(doctorDTO -> new Lab(labDTO.getSessionDate() , labDTO.getStartTime() , labDTO.getEndTime() , labDTO.getTestResult(), patientDTOConverter.DTOtoEntity(servicePatient.showPatientDetail(labDTO.getPatientId())) , doctorDTOConverter.convertToEntity(doctorFuture) , staffDTOConverter.convetToEntity(serviceStaff.getstaffDetail(labDTO.getStaffId() , token))));
+//    }
+
+    public CompletableFuture<Lab> convertToEntity(LabDTO labDTO, String token) {
+
+        CompletableFuture<DoctorDTO> doctorFuture =
+                serviceDoctor.showDetail(labDTO.getDoctorId(), token);
+
+        return doctorFuture.thenApply(doctorDTO ->
+                new Lab(
+                        labDTO.getSessionDate(),
+                        labDTO.getStartTime(),
+                        labDTO.getEndTime(),
+                        labDTO.getTestResult(),
+                        patientDTOConverter.DTOtoEntity(
+                                servicePatient.showPatientDetail(labDTO.getPatientId())
+                        ),
+                        doctorDTOConverter.convertToEntity(doctorDTO),
+                        staffDTOConverter.convetToEntity(
+                                serviceStaff.getstaffDetail(labDTO.getStaffId(), token)
+                        )
+                )
+        );
     }
 }

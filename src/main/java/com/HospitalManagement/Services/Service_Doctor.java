@@ -4,13 +4,13 @@ import com.HospitalManagement.DTOConverter.DoctorDTOConverter;
 import com.HospitalManagement.DTOs.DoctorDTO;
 import com.HospitalManagement.Entities.Doctor;
 import com.HospitalManagement.RepositoryInterfaces.DoctorRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class Service_Doctor {
@@ -31,6 +31,7 @@ public class Service_Doctor {
     }
 
     // Creating new doctor details in the database
+    @Async
     public String hireDoctor(DoctorDTO doctorDTO , String token) {
         try {
             // Let us verify the token
@@ -72,7 +73,8 @@ public class Service_Doctor {
     }
 
     // Obtaining all doctor details
-    public List<DoctorDTO> showAllDoc(String token) {
+    @Async
+    public CompletableFuture<List<DoctorDTO>> showAllDoc(String token) {
         try {
             // Let us verify the token
             if (token != null && token.startsWith("Bearer ")) {
@@ -87,7 +89,7 @@ public class Service_Doctor {
                     });
 
                     // returning the result
-                    return doctorDTOS;
+                    return CompletableFuture.completedFuture(doctorDTOS);
                 } else {
                     throw new RuntimeException("Unauthorized");
                 }
@@ -101,7 +103,8 @@ public class Service_Doctor {
     }
 
     // Obtaining specific doctor detail
-    public DoctorDTO showDetail(Long id , String token) {
+    @Async
+    public CompletableFuture<DoctorDTO> showDetail(Long id , String token) {
         try {
             // Let us verify the token
             if (token != null && token.startsWith("Bearer ")) {
@@ -114,7 +117,7 @@ public class Service_Doctor {
                     if (currentDoctor.isPresent()) {
 
                         // returning the result
-                        return converter.convertToDTO(currentDoctor.get());
+                        return CompletableFuture.completedFuture(converter.convertToDTO(currentDoctor.get()));
 
                     } else {
                         throw new RuntimeException("No such doctor exists please provide correct ID");
@@ -131,6 +134,7 @@ public class Service_Doctor {
     }
 
     // Updating the existing doctor detail
+    @Async
     public String updateDocRecord(Long id, DoctorDTO doctorDTO , String token) {
         try {
 
@@ -187,6 +191,7 @@ public class Service_Doctor {
     }
 
     // Removing doctor data from the table
+    @Async
     public String removeDoc(Long id , String token) {
         try {
             // Let us verify the token
