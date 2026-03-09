@@ -36,8 +36,12 @@ public class MultiFactor {
     public String generateOTP() {
         String randomData = "QWERTYUIOPLKJHFGDSAZXCVBNM1234567890poiuytrewqasdfghjklmnbvcxz";
         StringBuilder result = new StringBuilder();
+        // Creation of Random number
+        Random r = new Random();
+        int r1 = r.nextInt(randomData.length());
         for (int iter1 = 0 ; iter1 < 5 ; iter1++) {
-            result.append(randomData.charAt((int)Math.random() * randomData.length()));
+            result.append(randomData.charAt(r1));
+            r1 = r.nextInt(randomData.length());
         }
         return result.toString();
     }
