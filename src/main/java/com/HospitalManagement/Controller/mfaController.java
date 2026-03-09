@@ -3,7 +3,7 @@
 // Importing the necessary packages
 package com.HospitalManagement.Controller;
 import com.HospitalManagement.DTOs.IntermediateDTO;
-import com.HospitalManagement.Entities.TestData;
+import com.HospitalManagement.Entities.request;
 import com.HospitalManagement.Services.MultiFactor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +24,8 @@ public class mfaController {
 
     // now creation of two postMapping methods
     @PostMapping("/sendotp")
-    public void sendOTP(@RequestBody TestData testData){
-        multiFactor.sendOTP(testData);
+    public void sendOTP(@RequestBody request request){
+        multiFactor.sendOTP(request);
     }
 
     @PostMapping("/verify")

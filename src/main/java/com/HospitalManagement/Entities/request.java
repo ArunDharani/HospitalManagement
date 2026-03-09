@@ -4,10 +4,12 @@
 package com.HospitalManagement.Entities;
 import jakarta.persistence.*;
 
+import java.time.LocalTime;
+
 // Creation of Entity Table
 @Entity
 @Table(name = "request")
-public class TestData {
+public class request {
 
     // Creation of Class Members
     @Id
@@ -23,19 +25,23 @@ public class TestData {
     @Column(nullable = false)
     private String otp;
 
+    @Column(nullable = false)
+    private LocalTime startTime;
+
     // Creation of default constructor
-    public TestData() {
+    public request() {
     }
 
     // Creation of Parameterized constructor
-    public TestData(String name, String email, String otp) {
+    public request(String name, String email, String otp, LocalTime startTime) {
         this.name = name;
         this.email = email;
         this.otp = otp;
+        this.startTime = startTime;
     }
 
     // Creation of second parameterized constructor
-    public TestData(String name, String email) {
+    public request(String name, String email) {
         this.name = name;
         this.email = email;
     }
@@ -71,5 +77,13 @@ public class TestData {
 
     public void setOtp(String otp) {
         this.otp = otp;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 }

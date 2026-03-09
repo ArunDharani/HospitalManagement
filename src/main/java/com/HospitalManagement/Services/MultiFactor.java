@@ -5,13 +5,14 @@ package com.HospitalManagement.Services;
 import com.HospitalManagement.DTOs.EmailDTO;
 import com.HospitalManagement.DTOs.IntermediateDTO;
 import com.HospitalManagement.Entities.ResultData;
-import com.HospitalManagement.Entities.TestData;
+import com.HospitalManagement.Entities.request;
 import com.HospitalManagement.RepositoryInterfaces.RequestRepository;
 import com.HospitalManagement.RepositoryInterfaces.ResponseRepository;
-
-import java.util.Random;
-
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 // Creation of MultiFactor Service Class
 @Service
@@ -46,19 +47,33 @@ public class MultiFactor {
     }
 
     // Creation of Function to send email otp
-    public void sendOTP(TestData testData) {
+    public void sendOTP(request testData) {
+        try {
+            // Ensuring only unique email exist
+            requestRepo.findAll().forEach(request -> {
+                if (request.getEmail().equals(testData.getEmail())){
+                    throw new RuntimeException("Email already exists create new Request");
+                }
+            });
 
-        // Setting the otp
-        testData.setOtp(generateOTP());
+            // Setting the otp
+            testData.setOtp(generateOTP());
 
-        // saving the results
-        requestRepo.save(testData);
+            // Setting the current Time
+            testData.setStartTime(LocalTime.now());
 
-        // Now creating new EmailDTO
-        EmailDTO emailDTO = new EmailDTO(testData.getEmail(), testData.getOtp(), "verification");
+            // saving the results
+            requestRepo.save(testData);
 
-        // Now sending the email
-        serviceEmail.sendEmail(emailDTO);
+            // Now creating new EmailDTO
+            EmailDTO emailDTO = new EmailDTO(testData.getEmail(), testData.getOtp(), "verification");
+
+            // Now sending the email
+            serviceEmail.sendEmail(emailDTO);
+
+        } catch (Exception exception){
+            throw new RuntimeException("some exception has occurred in send OTP function  : "+exception.getMessage());
+        }
     }
 
     // Creation of function to verify the email
@@ -76,11 +91,32 @@ public class MultiFactor {
                     }
                 }
             });
-
-//            throw new RuntimeException("No such email exist");
+            //  throw new RuntimeException("No such email exist");
             return "good";
         } catch (Exception exception) {
             throw new RuntimeException("Some exception exist : "+exception.getMessage());
         }
     }
+
+    // Creation of function to remove OTP that are 10 minutes
+    @Scheduled(cron = "* */10 * * * *" )
+    public void CleanRequestTable() {
+        try {
+
+            // obtaining the request emails
+            requestRepo.findAll().forEach(request -> {
+                // Obtaining the current time
+                LocalTime Now = LocalTime.now();
+
+                if (ChronoUnit.MINUTES.between(request.getStartTime() ,Now) > 10) {
+                    requestRepo.delete(request);
+                }
+            });
+
+
+        } catch (Exception exception) {
+            throw new RuntimeException("Some exception has occurred in the CleanRequestTable function : "+exception.getMessage());
+        }
+    }
+
 }
