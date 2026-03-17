@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 // Creation of 'Service Class' with 'Patient'
 @Service
+@Transactional
 public class Service_Patient {
 
     // Creation of service instance

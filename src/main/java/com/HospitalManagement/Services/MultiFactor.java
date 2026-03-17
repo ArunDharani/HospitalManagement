@@ -10,12 +10,13 @@ import com.HospitalManagement.RepositoryInterfaces.RequestRepository;
 import com.HospitalManagement.RepositoryInterfaces.ResponseRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import org.springframework.transaction.annotation.Transactional;
 
 // Creation of MultiFactor Service Class
 @Service
+@Transactional
 public class MultiFactor {
 
     // Let us create instance of Email service , jwt service , RequestRepository , ResponseRepository

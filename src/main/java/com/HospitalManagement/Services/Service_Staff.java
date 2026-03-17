@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 // Creation of 'Service Class' for 'Staff'
 @Service
+@Transactional
 public class Service_Staff {
 
     // Creation of repo
