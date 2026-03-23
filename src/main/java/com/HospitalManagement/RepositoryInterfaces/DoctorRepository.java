@@ -13,5 +13,6 @@ import java.time.LocalTime;
 
 // Creation of interface to handle data in the database
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
-    boolean existsByEmail(String email);
+    @Query(value = "SELECT COUNT(*) > 0 FROM doctor WHERE email = :email", nativeQuery = true)
+    boolean existsByEmail(@Param("email") String email);
 }
