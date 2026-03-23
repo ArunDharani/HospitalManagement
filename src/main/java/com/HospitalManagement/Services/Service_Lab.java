@@ -13,7 +13,7 @@ import com.HospitalManagement.RepositoryInterfaces.LabRepository;
 import com.HospitalManagement.RepositoryInterfaces.PatientRepository;
 import com.HospitalManagement.RepositoryInterfaces.StaffRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.text.html.Option;
@@ -23,6 +23,7 @@ import java.util.Optional;
 
 // Creation of Service Layer for Lab
 @Service
+@Transactional
 public class Service_Lab {
 
     // Creation of instance labRepo , doctorRepo , PatientRepo , StaffRepo

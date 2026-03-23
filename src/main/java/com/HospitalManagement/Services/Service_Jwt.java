@@ -15,9 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 // Creation of 'Service_Class' for utilizing Service_Jwt
 @Service
+@Transactional
 public class Service_Jwt {
 
     // Now let us get the data from the Application.Properties

@@ -12,13 +12,14 @@ import com.HospitalManagement.RepositoryInterfaces.PatientRepository;
 import com.HospitalManagement.RepositoryInterfaces.PatientVisitHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 // Creation of 'service layer'
 @Service
+@Transactional
 public class Service_PatientVisitHistory {
 
     // Creation of instance of PatientVisitHistory Repo
