@@ -7,10 +7,13 @@ import com.HospitalManagement.RepositoryInterfaces.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 @Service
 public class Service_Doctor {
@@ -23,6 +26,12 @@ public class Service_Doctor {
     private final DoctorDTOConverter converter;
 
     @Autowired
+    private ExecutorService executorService;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
+    @Autowired
     public Service_Doctor(DoctorRepository doctorRepository , DoctorDTOConverter _converter , Service_Jwt serviceJwt) {
         this.doctorRepository = doctorRepository;
         this.converter = _converter;
@@ -31,45 +40,52 @@ public class Service_Doctor {
     }
 
     // Creating new doctor details in the database
-    @Async
-    public String hireDoctor(DoctorDTO doctorDTO , String token) {
-        try {
-            // Let us verify the token
-            if (token != null && token.startsWith("Bearer ")) {
-                String Email =  serviceJwt.extractUserEmail(token.substring(7));
-                if (Email.contains("@admin.com")) {
-                    // Let us obtain the doctor object from 'DoctorDTOConverter' clas
-                    Doctor doctor = converter.convertToEntity(doctorDTO);
+    public CompletableFuture<String> hireDoctor(DoctorDTO doctorDTO, String token) {
 
-                    // Let us cross-check the email for validation
-                    if ( !doctor.getEmail().contains(".com") || !doctor.getEmail().contains(String.valueOf('@'))) {
-                        throw new RuntimeException("It is not a proper email");
-                    }
+        return CompletableFuture.supplyAsync(() ->
 
-                    // Let us prevent only unique email is allowed
-                    doctorRepository.findAll().forEach(doctor1 -> {
-                        if (doctor1.getEmail().equals(doctorDTO.getEmail())) {
-                            throw new RuntimeException("Already user exist");
-                        }
-                    });
+                        transactionTemplate.execute(status -> {
+                            try {
 
-                    // Saving the data in the database
-                    doctorRepository.save(doctor);
+                                System.out.println("Thread: " + Thread.currentThread().getName());
 
-                    // returning the result
-                    return "New doctor has been appointed to the hospital";
+                                if (token == null || !token.startsWith("Bearer ")) {
+                                    throw new RuntimeException("Token is invalid");
+                                }
 
-                } else {
-                    throw new RuntimeException("Unauthorized");
-                }
-            } else {
-                throw new RuntimeException("Token is invalid");
-            }
+                                String extractedEmail = serviceJwt.extractUserEmail(token.substring(7));
 
+                                if (extractedEmail == null || !extractedEmail.contains("@admin.com")) {
+                                    throw new RuntimeException("Unauthorized access");
+                                }
 
-        } catch (Exception exception) {
-            return "Some Exception has occurred while creating new doctor object in hireDoctor function\n"+exception.getMessage();
-        }
+                                Doctor doctor = converter.convertToEntity(doctorDTO);
+
+                                String email = doctor.getEmail();
+
+                                if (email == null || !email.contains("@") || !email.contains(".com")) {
+                                    throw new RuntimeException("Invalid email format");
+                                }
+
+                                if (doctorRepository.existsByEmail(email)) {
+                                    throw new RuntimeException("Doctor already exists with this email");
+                                }
+
+                                doctorRepository.save(doctor);
+
+                                return "New doctor has been appointed to the hospital";
+
+                            } catch (Exception e) {
+
+                                status.setRollbackOnly();
+
+                                throw new RuntimeException(
+                                        "Error occurred while hiring doctor: " + e.getMessage()
+                                );
+                            }
+                        })
+
+                , executorService);
     }
 
     // Obtaining all doctor details
