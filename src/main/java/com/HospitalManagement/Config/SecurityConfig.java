@@ -3,6 +3,7 @@
 // Importing the necessary packages
 package com.HospitalManagement.Config;
 import com.HospitalManagement.Filter.AuthFilter;
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +31,7 @@ public class SecurityConfig {
         // Configuring the 'http'
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->auth
+                        .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                         .requestMatchers("/auth/test").permitAll()
                         .anyRequest().authenticated()
                 )

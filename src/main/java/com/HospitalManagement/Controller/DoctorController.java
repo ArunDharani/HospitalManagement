@@ -26,8 +26,8 @@ public class DoctorController {
 
     // Obtaining the available doctor details
     @GetMapping("/all")
-    public ResponseEntity<CompletableFuture<List<DoctorDTO>>> getAllDocs(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(serviceDoctor.showAllDoc(token));
+    public CompletableFuture<ResponseEntity<List<DoctorDTO>>> getAllDocs(@RequestHeader("Authorization") String token) {
+        return serviceDoctor.showAllDoc(token).thenApply(doctors -> ResponseEntity.ok(doctors));
     }
 
     // Obtaining the specific doctor details
