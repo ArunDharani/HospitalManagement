@@ -25,7 +25,8 @@ public class AuthController {
     @PostMapping("/test")
     public String getToken(@RequestBody AdminDTO adminDTO) {
         try {
-            return serviceJwt.generateToken(adminDTO);
+             String data =  serviceJwt.generateToken(adminDTO);
+             return data;
         } catch (Exception e) {
             throw new RuntimeException("Cause : "+e.getCause()+"\nMessage : "+e.getMessage()+"\nPath : "+e.getStackTrace());
         }

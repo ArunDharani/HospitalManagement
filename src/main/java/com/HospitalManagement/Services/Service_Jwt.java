@@ -43,14 +43,18 @@ public class Service_Jwt {
 
     // Creation of Function to generate token when AdminDTO is given
     public String generateToken(AdminDTO adminDTO) {
-        return Jwts.builder()
+        String result = Jwts.builder()
                 .setSubject(adminDTO.getEmail())
                 .setAudience(adminDTO.getPassword())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .compact();
+
+        return result;
+
     }
+
 
     // Creation of Function to extract userEmail
     public String extractUserEmail(String token) {

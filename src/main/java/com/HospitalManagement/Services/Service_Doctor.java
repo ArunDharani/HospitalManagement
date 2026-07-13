@@ -6,6 +6,7 @@ import com.HospitalManagement.Entities.Doctor;
 import com.HospitalManagement.RepositoryInterfaces.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 @Service
+@EnableAsync
 public class Service_Doctor {
 
     // Creation of instance of DoctorRepository and Service_Jwt
