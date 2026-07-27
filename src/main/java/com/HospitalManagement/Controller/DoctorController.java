@@ -36,16 +36,6 @@ public class DoctorController {
         return ResponseEntity.ok(serviceDoctor.showDetail(id , token));
     }
 
-    // Creating new Doctor object
-    @PostMapping
-    public CompletableFuture<ResponseEntity<String>> hireDoctor(
-            @RequestBody DoctorDTO doctor,
-            @RequestHeader("Authorization") String token) {
-
-        return serviceDoctor.hireDoctor(doctor, token)
-                .thenApply(result -> ResponseEntity.ok(result));
-    }
-
     // Updating the doctor object
     @PutMapping("/{id}")
     public ResponseEntity<String> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctor , @RequestHeader("Authorization") String token) {

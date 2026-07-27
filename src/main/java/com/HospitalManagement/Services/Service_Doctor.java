@@ -41,55 +41,6 @@ public class Service_Doctor {
         System.out.println("Instance has been created in Service_Doctor class");
     }
 
-    // Creating new doctor details in the database
-    public CompletableFuture<String> hireDoctor(DoctorDTO doctorDTO, String token) {
-
-        return CompletableFuture.supplyAsync(() ->
-
-                        transactionTemplate.execute(status -> {
-                            try {
-
-                                System.out.println("Thread: " + Thread.currentThread().getName());
-
-                                if (token == null || !token.startsWith("Bearer ")) {
-                                    throw new RuntimeException("Token is invalid");
-                                }
-
-                                String extractedEmail = serviceJwt.extractUserEmail(token.substring(7));
-
-                                if (extractedEmail == null || !extractedEmail.contains("@admin.com")) {
-                                    throw new RuntimeException("Unauthorized access");
-                                }
-
-                                Doctor doctor = converter.convertToEntity(doctorDTO);
-
-                                String email = doctor.getEmail();
-
-                                if (email == null || !email.contains("@") || !email.contains(".com")) {
-                                    throw new RuntimeException("Invalid email format");
-                                }
-
-                                if (doctorRepository.existsByEmail(email)) {
-                                    throw new RuntimeException("Doctor already exists with this email");
-                                }
-
-                                doctorRepository.save(doctor);
-
-                                return "New doctor has been appointed to the hospital";
-
-                            } catch (Exception e) {
-
-                                status.setRollbackOnly();
-
-                                throw new RuntimeException(
-                                        "Error occurred while hiring doctor: " + e.getMessage()
-                                );
-                            }
-                        })
-
-                , executorService);
-    }
-
     // Obtaining all doctor details
     @Async
     public CompletableFuture<List<DoctorDTO>> showAllDoc(String token) {
