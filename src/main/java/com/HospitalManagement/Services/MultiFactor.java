@@ -100,7 +100,9 @@ public class MultiFactor {
     }
 
     // Creation of function to remove OTP that are 10 minutes
-    @Scheduled(cron = "* */10 * * * *" )
+
+    // temporary disabling of jobs
+//    @Scheduled(cron = "* */10 * * * *" )
     public void CleanRequestTable() {
         try {
 
